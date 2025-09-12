@@ -20,7 +20,12 @@ await connectCloudinary();
 
 // middlewares
 app.use(clerkMiddleware());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://job-protal01.vercel.app/", // replace with your actual frontend domain
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Routes
