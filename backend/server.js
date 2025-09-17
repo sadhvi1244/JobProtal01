@@ -18,18 +18,16 @@ const app = express();
 await connectDB();
 await connectCloudinary();
 
-// ✅ CORS configuration
+// ✅ Clean CORS configuration
 const corsOptions = {
-  origin: "https://job-protal-site.vercel.app", // ← Your frontend deployed URL
+  origin: process.env.FRONTEND_URL || "https://job-protal-site.vercel.app", // Best to use env var!
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
 
-// Handle preflight requests
-app.options("*", cors(corsOptions));
-
-// Apply CORS middleware globally
+// Apply CORS middleware before routes
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Preflight handler
 
 app.use(express.json());
 app.use(clerkMiddleware());
