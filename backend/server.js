@@ -18,16 +18,7 @@ const app = express();
 await connectDB();
 await connectCloudinary();
 
-// ✅ Clean CORS configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "https://job-protal-site.vercel.app", // Best to use env var!
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
-};
-
-// Apply CORS middleware before routes
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight handler
+app.use(cors());
 
 app.use(express.json());
 app.use(clerkMiddleware());
@@ -53,4 +44,16 @@ Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    console.log(
+      "🚀 Response Headers for",
+      req.originalUrl,
+      ":",
+      res.getHeaders()
+    );
+  });
+  next();
 });
