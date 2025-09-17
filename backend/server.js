@@ -14,11 +14,28 @@ import { clerkMiddleware } from "@clerk/express";
 // initialize express
 const app = express();
 
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    console.log(
+      "🚀 Response Headers for",
+      req.originalUrl,
+      ":",
+      res.getHeaders()
+    );
+  });
+  next();
+});
+
 // connect to database
 await connectDB();
 await connectCloudinary();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(clerkMiddleware());
@@ -44,16 +61,4 @@ Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
-
-app.use((req, res, next) => {
-  res.on("finish", () => {
-    console.log(
-      "🚀 Response Headers for",
-      req.originalUrl,
-      ":",
-      res.getHeaders()
-    );
-  });
-  next();
 });
