@@ -18,18 +18,31 @@ const app = express();
 await connectDB();
 await connectCloudinary();
 
-// middlewares
-app.use(clerkMiddleware());
-app.use(cors());
+// ✅ CORS configuration
+const corsOptions = {
+  origin: "https://job-protal-site.vercel.app", // ← Your frontend deployed URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
+
+// Apply CORS middleware globally
+app.use(cors(corsOptions));
+
 app.use(express.json());
+app.use(clerkMiddleware());
 
 // Routes
 app.get("/", (req, res) => {
   res.send("Hell0, Sadhvi Kesarwani");
 });
+
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
+
 app.post("/webhooks", clerkWebhooks);
 app.use("/api/company", companyRoutes);
 app.use("/api/jobs", jobRoutes);
