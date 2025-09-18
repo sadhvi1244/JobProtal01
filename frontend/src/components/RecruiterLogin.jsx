@@ -37,16 +37,17 @@ const RecruiterLogin = () => {
           toast.success("Logged in successfully");
           navigate("/dashboard");
         } else {
-          toast.error(error.message);
+          toast.error(data.message || "Login failed");
         }
       } else {
         const formData = new FormData();
         formData.append("name", name);
         formData.append("email", email);
         formData.append("password", password);
-        formData.append("image", image);
+        if (image) {
+          formData.append("image", image);
+        }
 
-        // Sign Up (correct)
         const { data } = await axios.post(
           backendUrl + "/api/company/register",
           formData,
@@ -60,14 +61,16 @@ const RecruiterLogin = () => {
           setCompanyToken(data.token);
           localStorage.setItem("companyToken", data.token);
           setShowRecruiterLogin(false);
-          toast.success("Logged in successfully");
+          toast.success("Account created successfully");
           navigate("/dashboard");
         } else {
-          toast.error(error.message);
+          toast.error(data.message || "Registration failed");
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message || error.message || "An error occurred"
+      );
     }
   };
 
@@ -77,16 +80,16 @@ const RecruiterLogin = () => {
     return () => {
       document.body.style.overflow = "auto";
     };
-  });
+  }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 bottom-0 z-10 flex justify-center items-center backdrop-blur-sm bg-black/40">
+    <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black/40">
       <form
         onSubmit={onSubmitHandler}
-        className="relative bg-white p-8 rounded-2xl shadow-xl w-90 flex flex-col gap-4"
+        className="relative bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-4 flex flex-col gap-4"
       >
         <img
-          onClick={(e) => setShowRecruiterLogin(false)}
+          onClick={() => setShowRecruiterLogin(false)}
           src={assets.cross_icon}
           className="absolute top-4 right-4 w-4 h-4 cursor-pointer"
           alt="Close"
@@ -98,21 +101,22 @@ const RecruiterLogin = () => {
           Welcome back! Please sign in to continue
         </p>
         {state === "Sign Up" && isTextDataSubmitted ? (
-          <div className="flex items-center gap-4 my-10">
-            <label htmlFor="image">
+          <div className="flex items-center gap-4 my-4">
+            <label htmlFor="image" className="cursor-pointer">
               <img
-                className="w-16 rounded-full"
+                className="w-16 h-16 rounded-full object-cover border"
                 src={image ? URL.createObjectURL(image) : assets.upload_area}
-                alt=""
+                alt="Company logo preview"
               />
               <input
                 onChange={(e) => setImage(e.target.files[0])}
                 type="file"
                 id="image"
                 hidden
+                accept="image/*"
               />
             </label>
-            <p>
+            <p className="text-sm text-gray-600">
               Upload Company <br />
               logo
             </p>
@@ -120,50 +124,62 @@ const RecruiterLogin = () => {
         ) : (
           <>
             {state !== "Login" && (
-              <div className="flex items-center border rounded-lg p-2 bg-gray-100">
-                <img src={assets.person_icon} alt="" className="mr-2" />
+              <div className="flex items-center border border-gray-300 rounded-lg p-3">
+                <img
+                  src={assets.person_icon}
+                  alt="Person icon"
+                  className="w-5 h-5 mr-3 opacity-70"
+                />
                 <input
                   onChange={(e) => setName(e.target.value)}
                   value={name}
                   type="text"
                   placeholder="Company Name"
                   required
-                  className="bg-transparent text-sm outline-none w-full"
+                  className="flex-1 bg-transparent text-sm outline-none placeholder-gray-500"
                 />
               </div>
             )}
-            <div className="flex items-center border rounded-lg p-2 bg-gray-100">
-              <img src={assets.email_icon} alt="" className="mr-2" />
+            <div className="flex items-center border border-gray-300 rounded-lg p-3">
+              <img
+                src={assets.email_icon}
+                alt="Email icon"
+                className="w-5 h-5 mr-3 opacity-70"
+              />
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 type="email"
                 placeholder="Email Address"
                 required
-                className="bg-transparent text-sm outline-none w-full"
+                className="flex-1 bg-transparent text-sm outline-none placeholder-gray-500"
               />
             </div>
-            <div className="flex items-center border rounded-lg p-2 bg-gray-100">
-              <img src={assets.lock_icon} alt="" className="mr-2" />
+            <div className="flex items-center border border-gray-300 rounded-lg p-3">
+              <img
+                src={assets.lock_icon}
+                alt="Lock icon"
+                className="w-5 h-5 mr-3 opacity-70"
+              />
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 type="password"
                 placeholder="Password"
                 required
-                className="bg-transparent text-sm outline-none w-full"
+                className="flex-1 bg-transparent text-sm outline-none placeholder-gray-500"
               />
             </div>
           </>
         )}
         {state === "Login" && (
-          <p className="text-sm text-blue-600 hover:text-blue-800 my-2 cursor-pointer">
+          <p className="text-sm text-blue-600 hover:text-blue-800 my-2 cursor-pointer text-right">
             Forgot password?
           </p>
         )}
         <button
           type="submit"
-          className="mt-3 bg-blue-600 text-white py-2 rounded-full font-semibold hover:bg-blue-700 transition"
+          className="mt-3 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
         >
           {state === "Login"
             ? "Login"
@@ -172,21 +188,24 @@ const RecruiterLogin = () => {
             : "Next"}
         </button>
         {state === "Login" ? (
-          <p className="mt-3 text-center">
+          <p className="mt-3 text-center text-sm text-gray-600">
             Don't have an account?{" "}
             <span
-              className="text-blue-600 cursor-pointer"
+              className="text-blue-600 cursor-pointer hover:underline"
               onClick={() => setState("Sign Up")}
             >
               Sign Up
             </span>
           </p>
         ) : (
-          <p className="mt-3 text-center">
+          <p className="mt-3 text-center text-sm text-gray-600">
             Already have an account?{" "}
             <span
-              className="text-blue-600 cursor-pointer"
-              onClick={() => setState("Login")}
+              className="text-blue-600 cursor-pointer hover:underline"
+              onClick={() => {
+                setState("Login");
+                setIsTextDataSubmitted(false);
+              }}
             >
               Login
             </span>
