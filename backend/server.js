@@ -14,6 +14,7 @@ import { clerkMiddleware } from "@clerk/express";
 // initialize express
 const app = express();
 
+// Log response headers for debugging
 app.use((req, res, next) => {
   res.on("finish", () => {
     console.log(
@@ -26,19 +27,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// connect to database
+// connect to database and cloudinary
 await connectDB();
 await connectCloudinary();
 
+// Middlewares
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "https://job-protal-site.vercel.app/", // use environment variable or fallback
     credentials: true,
   })
 );
-
 app.use(express.json());
-app.use(clerkMiddleware());
+app.use(clerkMiddleware()); // should come after JSON and CORS
 
 // Routes
 app.get("/", (req, res) => {
@@ -57,6 +58,7 @@ app.use("/api/users", userRoutes);
 // PORT
 const PORT = process.env.PORT || 3001;
 
+// Sentry error handler
 Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, () => {
