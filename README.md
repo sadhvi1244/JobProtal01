@@ -97,10 +97,12 @@ Once installed, you can run the JobProtal01 application.
     *   Post new job openings with detailed descriptions.
     *   Review applications submitted by job seekers.
     *   Manage your active job listings and company profile.
+      
 
 ![JobProtal01 Usage Screenshot Placeholder](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1758257281/Screenshot_2025-09-19_100410_gzcjcz.png)
-![JobProtal01 Usage Screenshot Placeholder](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1758257281/Screenshot_2025-09-19_101537_jrqyul.png)
 ![JobProtal01 Usage Screenshot Placeholder](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1758257280/Screenshot_2025-09-19_101202_zbcurj.png)
+![JobProtal01 Usage Screenshot Placeholder](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1758257281/Screenshot_2025-09-19_101537_jrqyul.png)
+
 
 ## 🗺️ Project Roadmap
 
