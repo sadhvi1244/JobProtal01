@@ -20,7 +20,7 @@ const Navbar = () => {
         >
           <img
             src={assets.logo}
-            className="h-8 transition-transform duration-300 group-hover:scale-105"
+            className="h-11 transition-transform duration-300 group-hover:scale-105"
             alt="Company Logo"
           />
         </div>
