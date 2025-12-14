@@ -23,9 +23,6 @@ const Navbar = () => {
             className="h-8 transition-transform duration-300 group-hover:scale-105"
             alt="Company Logo"
           />
-          <span className="hidden sm:block text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
-            JobConnect
-          </span>
         </div>
 
         {user ? (
