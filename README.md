@@ -4,7 +4,7 @@ A robust, full-stack job portal connecting job seekers with employers efficientl
 
 
 
-![JobProtal01 Preview](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1758257301/Screenshot_2025-09-19_100355_eaobsp.png)
+![JobProtal01 Preview](https://res.cloudinary.com/dgkhbg0wc/image/upload/v1765736767/Screenshot_2025-12-14_235219_ticr9y.png)
 
 
 ## ✨ Features
